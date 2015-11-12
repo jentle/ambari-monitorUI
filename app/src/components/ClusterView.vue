@@ -4,9 +4,9 @@
 <table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp mdl-cell mdl-cell--12-col">
   <thead>
     <tr>
-      <th class="mdl-data-table__cell--non-numeric">Material</th>
-      <th>Quantity</th>
-      <th>Unit price</th>
+      <th class="mdl-data-table__cell--non-numeric">Host</th>
+      <th>Port</th>
+      <th>State</th>
     </tr>
   </thead>
   <tbody>

@@ -15125,7 +15125,7 @@
 /* 138 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"mdl-grid\">\n<div class=\" mdl-cell mdl-cell--12-col mdl-grid\">\n<table class=\"mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp mdl-cell mdl-cell--12-col\">\n  <thead>\n    <tr>\n      <th class=\"mdl-data-table__cell--non-numeric\">Material</th>\n      <th>Quantity</th>\n      <th>Unit price</th>\n    </tr>\n  </thead>\n  <tbody>\n  </tbody>\n</table>\n</div>\n<!-- Raised button -->\n<div class=\"mdl-cell mdl-cell--12-col mdl-grid\">\n<div class=\"mdl-cell mdl-cell--3-col\" >\n<button class=\"mdl-button mdl-js-button mdl-button--raised \"  @click=\"showModal= true\">\n  Add New Cluster\n</button>\n</div>\n<div class=\"mdl-cell mdl-cell--3-col\" >\n<button class=\"mdl-button mdl-js-button mdl-button--raised \">\n  Delete Cluster\n</button>\n</div>\n</div>\n  <modal :show.sync=\"showModal\">\n  <slot name=\"body\">\n  \t<form>\n       Host : < input type=\"text\" v-model='host' />\n       Port : <input type=\"text\" v-model=\"port\" />\n       <input type=\"submit\" @click=\"addCluster\" />\n    </form>\n  </slot>\n </modal>\n</div>";
+	module.exports = "<div class=\"mdl-grid\">\n<div class=\" mdl-cell mdl-cell--12-col mdl-grid\">\n<table class=\"mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp mdl-cell mdl-cell--12-col\">\n  <thead>\n    <tr>\n      <th class=\"mdl-data-table__cell--non-numeric\">Host</th>\n      <th>Port</th>\n      <th>State</th>\n    </tr>\n  </thead>\n  <tbody>\n  </tbody>\n</table>\n</div>\n<!-- Raised button -->\n<div class=\"mdl-cell mdl-cell--12-col mdl-grid\">\n<div class=\"mdl-cell mdl-cell--3-col\" >\n<button class=\"mdl-button mdl-js-button mdl-button--raised \"  @click=\"showModal= true\">\n  Add New Cluster\n</button>\n</div>\n<div class=\"mdl-cell mdl-cell--3-col\" >\n<button class=\"mdl-button mdl-js-button mdl-button--raised \">\n  Delete Cluster\n</button>\n</div>\n</div>\n  <modal :show.sync=\"showModal\">\n  <slot name=\"body\">\n  \t<form>\n       Host : < input type=\"text\" v-model='host' />\n       Port : <input type=\"text\" v-model=\"port\" />\n       <input type=\"submit\" @click=\"addCluster\" />\n    </form>\n  </slot>\n </modal>\n</div>";
 
 /***/ },
 /* 139 */
@@ -15980,6 +15980,7 @@
 /* 144 */
 /***/ function(module, exports, __webpack_require__) {
 
+	__webpack_require__(147)
 	module.exports = __webpack_require__(145)
 	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(146)
 	if (false) {
@@ -16021,7 +16022,47 @@
 /* 146 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"modal-mask\" v-show=\"show\" transition=\"modal\">\n    <div class=\"modal-wrapper\">\n      <div class=\"modal-container\">\n\n        <div class=\"modal-header\">\n          <slot name=\"header\">\n          </slot>\n        </div>\n        \n        <div class=\"modal-body\">\n          <slot name=\"body\">\n          </slot>\n        </div>\n\n        <div class=\"modal-footer\">\n          <slot name=\"footer\">\n            <button class=\"modal-default-button\"\n              @click=\"show = false\">\n              OK \n            </button>\n          </slot>\n        </div>\n      </div>\n    </div>\n  </div>";
+	module.exports = "<div class=\"modal-mask\" v-show=\"show\" transition=\"modal\">\n    <div class=\"modal-wrapper\">\n      <div class=\"modal-container\">\n\n        <div class=\"modal-header\">\n          <slot name=\"header\">\n          </slot>\n        </div>\n        \n        <div class=\"modal-body\">\n          <slot name=\"body\">\n          </slot>\n        </div>\n\n        <div class=\"modal-footer\">\n          <slot name=\"footer\">\n            <button class=\"modal-default-button\"\n              @click=\"show = false\">\n              OK\n            </button>\n          </slot>\n        </div>\n      </div>\n    </div>\n  </div>";
+
+/***/ },
+/* 147 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(148);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(111)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/vue-loader/lib/style-rewriter.js!./../../../node_modules/stylus-loader/index.js!./../../../node_modules/vue-loader/lib/selector.js?type=style&index=0!./Modal.vue", function() {
+				var newContent = require("!!./../../../node_modules/css-loader/index.js!./../../../node_modules/vue-loader/lib/style-rewriter.js!./../../../node_modules/stylus-loader/index.js!./../../../node_modules/vue-loader/lib/selector.js?type=style&index=0!./Modal.vue");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 148 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(110)();
+	// imports
+	
+	
+	// module
+	exports.push([module.id, ".modal-mask {\n  position: fixed;\n  z-index: 9998;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background-color: rgba(0,0,0,0.5);\n  display: table;\n  -webkit-transition: opacity 0.3s ease;\n  transition: opacity 0.3s ease;\n}\n.modal-wrapper {\n  display: table-cell;\n  vertical-align: middle;\n}\n.modal-container {\n  width: 300px;\n  margin: 0px auto;\n  padding: 20px 30px;\n  background-color: #fff;\n  border-radius: 2px;\n  box-shadow: 0 2px 8px rgba(0,0,0,0.33);\n  -webkit-transition: all 0.3s ease;\n  transition: all 0.3s ease;\n  font-family: Helvetica, Arial, sans-serif;\n}\n.modal-header h3 {\n  margin-top: 0;\n  color: #42b983;\n}\n.modal-body {\n  margin: 20px 0;\n}\n.modal-default-button {\n  float: right;\n}\n/*\n * the following styles are auto-applied to elements with\n * v-transition=\"modal\" when their visiblity is toggled\n * by Vue.js.\n *\n * You can easily play with the modal transition by editing\n * these styles.\n */\n.modal-enter,\n.modal-leave {\n  opacity: 0;\n}\n.modal-enter .modal-container,\n.modal-leave .modal-container {\n  -webkit-transform: scale(1.1);\n  -ms-transform: scale(1.1);\n      transform: scale(1.1);\n}\n", ""]);
+	
+	// exports
+
 
 /***/ }
 /******/ ]);
