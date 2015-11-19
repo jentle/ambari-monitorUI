@@ -12,15 +12,19 @@ var clusterService= new Vue({
 		}
 	},
 	created: function() {
-	      this.resource = this.$resource('clusters'); 
+	      this.resource = this.$resource('clusters/:id'); 
 	  }
 })
 
 var alertService= new Vue({
 	name:'alertService',
-	
+	data:function(){
+		return {
+			resource:Object
+		}
+	},
 	created: function() {
-	     this.$resource('alerts'); 
+	      this.resource = this.$resource('clusters/:id/alerts/metric/:alertId'); 
 	  }
 })
 
