@@ -1,10 +1,10 @@
 <template>
-    <div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+    <div class="mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
        <app-header></app-header>
 	   <left-navigation  :accounts="accounts"></left-navigation>
         <!-- main view -->
       <main class="mdl-layout__content mdl-color--grey-100">
-        <div class="mdl-grid demo-content">
+        <div class="">
           <router-view
             class="view"
             keep-alive

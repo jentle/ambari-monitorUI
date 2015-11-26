@@ -28,9 +28,22 @@ var alertService= new Vue({
 	  }
 })
 
+var instanceService= new Vue({
+	name:'instanceService',
+	data:function(){
+		return {
+			resource:Object
+		}
+	},
+	created: function() {
+	       this.resource = this.$resource('clusters/:id/instances/:instanceId'); 
+	  }
+})
+
 var Resource = {
 	clusterService : clusterService,
-	alertService : alertService
+	alertService : alertService,
+	instanceService:instanceService,
 }
 
 module.exports = Resource

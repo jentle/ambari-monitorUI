@@ -1,6 +1,6 @@
 <template>
-<div class="mdl-grid">
-<div class=" mdl-cell mdl-cell--12-col mdl-grid">
+<div>
+<div class=" mdl-color--white mdl-cell mdl-cell--12-col mdl-grid">
 <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp mdl-cell mdl-cell--12-col">
   <thead>
     <tr>
@@ -21,16 +21,16 @@
     </tr>
   </tbody>
 </table>
-</div>
-<!-- Raised button -->
-<div class="mdl-cell mdl-cell--12-col mdl-grid">
-<div class="mdl-cell mdl-cell--4-col" >
+
+<div class="mdl-cell mdl-cell--12-col" >
 <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"  @click="showModal= true">
   Add New Cluster
 </button>
 </div>
 
 </div>
+<!-- Raised button -->
+
   <modal :show.sync="showModal">
     <h3 slot="header">New Cluster</h3>
   	<form slot="body">
@@ -139,7 +139,7 @@ export default {
 		
 		clusterDetail:function(index){
 			var clusterId = this.clusters[index].id
-			this.$route.router.go({name:'cluster', params:{id: clusterId},})
+			this.$route.router.go({name:'cluster', params:{id: clusterId}})
 		},
 	},
 	

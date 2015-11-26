@@ -3,7 +3,7 @@ var Router = require('vue-router');
 var  App = require("./components/App.vue")
 var DashboardView = require('./components/DashboardView.vue')
 var ClusterView = require('./components/ClusterView.vue')
-var AlertView = require('./components/AlertView.vue')
+var DetailView = require('./components/DetailView.vue')
 
 var validator = require('vue-validator')
 
@@ -23,11 +23,8 @@ router.map({
   	  },
     '/clusters/:id': {	
 		name:'cluster',
-    	component: AlertView,			
-      },
-	  '/alerts':{
-		  component:AlertView
-	  }
+    	component: DetailView,			
+      }
 	 
 	 
 })

@@ -1,15 +1,13 @@
 <template>
-<div class="mdl-grid">
-<div class=" mdl-cell mdl-cell--12-col mdl-grid">
-<mdl-table :header="tableHeader"  :data="alerts"></mdl-table>
-</div>
-<!-- Raised button -->
-<div class="mdl-cell mdl-cell--12-col mdl-grid">
-<div class="mdl-cell mdl-cell--6-col" >
-<button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent"  @click="showModal= true">
-  Add Alert Definition
-</button>
-</div>
+<div >
+         <div class="mdl-cell mdl-cell--12-col mdl-grid">
+              <mdl-table :header="tableHeader"  :data="alerts"></mdl-table>
+              <div class="mdl-cell mdl-cell--12-col">
+                <button class="mdl-button mdl-js-button mdl-button--raised mdl-button--accent" @click="showModal=true">Add alert definition</button>
+              </div>
+         </div> 
+                    
+ 
   <modal :show.sync="showModal">
     <h3 slot="header">New Alarm</h3>
   	<form slot="body">
@@ -66,7 +64,7 @@ var Alarm = function(){
 
 export default{
 	
-	name:"AlertView",
+	name:"AlertPanel",
 	components:{
 		MdlTable,
 	    Modal
@@ -74,7 +72,7 @@ export default{
 	
 	data(){
 		return {
-			tableHeader:[{"title":"Name"},{"title":"Definition"},{"title":"Description"},{"title":"Time"},{"title":"Status"}],
+			tableHeader:[{"title":"Name"},{"title":"Definition"},{"title":"Description"},{"title":"Time"},{"title":"Status"},{"title":"Action"}],
 			alerts : {name:"ok"},
 			showModal:false,
 			alarm:new Alarm()
@@ -93,6 +91,7 @@ export default{
 		    var clusterId = vm.$route.params.id		
 			alertService.resource.save({id:clusterId},vm.alarm, function(data, status, request){
 			})	
+			this.leaveModal();
 		},
 		
 	},

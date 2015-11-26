@@ -64,7 +64,7 @@
 	var App = __webpack_require__(109);
 	var DashboardView = __webpack_require__(123);
 	var ClusterView = __webpack_require__(135);
-	var AlertView = __webpack_require__(148);
+	var DetailView = __webpack_require__(156);
 	
 	var validator = __webpack_require__(143);
 	
@@ -75,19 +75,16 @@
 	var router = new Router();
 	
 	router.map({
-		'/': {
-			component: DashboardView
-		},
-		'/clusters': {
-			component: ClusterView
-		},
-		'/clusters/:id': {
-			name: 'cluster',
-			component: AlertView
-		},
-		'/alerts': {
-			component: AlertView
-		}
+	  '/': {
+	    component: DashboardView
+	  },
+	  '/clusters': {
+	    component: ClusterView
+	  },
+	  '/clusters/:id': {
+	    name: 'cluster',
+	    component: DetailView
+	  }
 	
 	});
 	
@@ -14060,7 +14057,7 @@
 /* 122 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header\">\n       <app-header></app-header>\n\t   <left-navigation  :accounts=\"accounts\"></left-navigation>\n        <!-- main view -->\n      <main class=\"mdl-layout__content mdl-color--grey-100\">\n        <div class=\"mdl-grid demo-content\">\n          <router-view\n            class=\"view\"\n            keep-alive\n            transition\n            transition-mode=\"out-in\">\n         </router-view>\n        </div>\n      </main>\n        \n    </div>";
+	module.exports = "<div class=\"mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header\">\n       <app-header></app-header>\n\t   <left-navigation  :accounts=\"accounts\"></left-navigation>\n        <!-- main view -->\n      <main class=\"mdl-layout__content mdl-color--grey-100\">\n        <div class=\"\">\n          <router-view\n            class=\"view\"\n            keep-alive\n            transition\n            transition-mode=\"out-in\">\n         </router-view>\n        </div>\n      </main>\n        \n    </div>";
 
 /***/ },
 /* 123 */
@@ -14132,9 +14129,22 @@
 		}
 	});
 	
+	var instanceService = new Vue({
+		name: 'instanceService',
+		data: function data() {
+			return {
+				resource: Object
+			};
+		},
+		created: function created() {
+			this.resource = this.$resource('clusters/:id/instances/:instanceId');
+		}
+	});
+	
 	var Resource = {
 		clusterService: clusterService,
-		alertService: alertService
+		alertService: alertService,
+		instanceService: instanceService
 	};
 	
 	module.exports = Resource;
@@ -15251,7 +15261,7 @@
 /* 142 */
 /***/ function(module, exports) {
 
-	module.exports = "<div class=\"mdl-grid\">\n<div class=\" mdl-cell mdl-cell--12-col mdl-grid\">\n<table class=\"mdl-data-table mdl-js-data-table mdl-shadow--2dp mdl-cell mdl-cell--12-col\">\n  <thead>\n    <tr>\n      <th class=\"mdl-data-table__cell--non-numeric\">Host</th>\n      <th class=\"mdl-data-table__cell--non-numeric\">Port</th>\n      <th class=\"mdl-data-table__cell--non-numeric\">State</th>\n      <th class=\"mdl-data-table__cell--non-numeric\"></th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr v-for=\"cluster in clusters\" @click=\"clusterDetail($index)\">\n      <td class=\"mdl-data-table__cell--non-numeric\">{{cluster.host}}</td>\n      <td class=\"mdl-data-table__cell--non-numeric\">{{cluster.port}}</td>\n      <td class=\"mdl-data-table__cell--non-numeric\">{{cluster.state}}</td>\n      <td class=\"mdl-data-table__cell--non-numeric\"><button class=\"mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab\">\n          <i class=\"material-icons\" @click=\"deleteCluster($index)\">close</i>\n      </button></td>\n    </tr>\n  </tbody>\n</table>\n</div>\n<!-- Raised button -->\n<div class=\"mdl-cell mdl-cell--12-col mdl-grid\">\n<div class=\"mdl-cell mdl-cell--4-col\" >\n<button class=\"mdl-button mdl-js-button mdl-button--raised mdl-button--accent\"  @click=\"showModal= true\">\n  Add New Cluster\n</button>\n</div>\n\n</div>\n  <modal :show.sync=\"showModal\">\n    <h3 slot=\"header\">New Cluster</h3>\n  \t<form slot=\"body\">\n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\" v-model=\"ambari.host\" id=\"ambari-host\" pattern=\"^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$\">\n           <label class=\"mdl-textfield__label\" for=\"ambari-host\">Host</label>\n           <span class=\"mdl-textfield__error\">Invalid IP</span>\n       </div> \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\" v-model=\"ambari.port\" id=\"ambari-port\" pattern=\"^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$\">\n           <label class=\"mdl-textfield__label\" for=\"ambari-port\">Port</label>\n           <span class=\"mdl-textfield__error\">Invalid Port</span>\n\n       </div>   \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\" v-model=\"ambari.user\" id=\"ambari-user\">\n           <label class=\"mdl-textfield__label\" for=\"ambari-user\">Username</label>\n       </div>   \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\" v-model=\"ambari.pass\" id=\"ambari-pass\">\n           <label class=\"mdl-textfield__label\" for=\"ambari-pass\">Password</label>\n       </div>    \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\"  v-model=\"confirmPass\" id=\"ambari-confirmPass\" pattern=\"{{ambari.pass}}\">\n           <label class=\"mdl-textfield__label\" for=\"ambari-confirmPass\">Confirm Password</label>\n           <span class=\"mdl-textfield__error\" >Incorrect Password</span>\n       </div>        \n    </form>\n  <div slot=\"footer\">\n    <button class=\"mdl-button mdl-js-button mdl-button--raised mdl-button--accent\" @click=\"addCluster\">\n      Add Cluster\n    </button>\n    <button class=\"mdl-button mdl-js-button mdl-button--raised \" @click=\"leaveModal\">\n      Cancel\n    </button>\n </div>\n </modal>\n</div>";
+	module.exports = "<div>\n<div class=\" mdl-color--white mdl-cell mdl-cell--12-col mdl-grid\">\n<table class=\"mdl-data-table mdl-js-data-table mdl-shadow--2dp mdl-cell mdl-cell--12-col\">\n  <thead>\n    <tr>\n      <th class=\"mdl-data-table__cell--non-numeric\">Host</th>\n      <th class=\"mdl-data-table__cell--non-numeric\">Port</th>\n      <th class=\"mdl-data-table__cell--non-numeric\">State</th>\n      <th class=\"mdl-data-table__cell--non-numeric\"></th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr v-for=\"cluster in clusters\" @click=\"clusterDetail($index)\">\n      <td class=\"mdl-data-table__cell--non-numeric\">{{cluster.host}}</td>\n      <td class=\"mdl-data-table__cell--non-numeric\">{{cluster.port}}</td>\n      <td class=\"mdl-data-table__cell--non-numeric\">{{cluster.state}}</td>\n      <td class=\"mdl-data-table__cell--non-numeric\"><button class=\"mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab\">\n          <i class=\"material-icons\" @click=\"deleteCluster($index)\">close</i>\n      </button></td>\n    </tr>\n  </tbody>\n</table>\n\n<div class=\"mdl-cell mdl-cell--12-col\" >\n<button class=\"mdl-button mdl-js-button mdl-button--raised mdl-button--accent\"  @click=\"showModal= true\">\n  Add New Cluster\n</button>\n</div>\n\n</div>\n<!-- Raised button -->\n\n  <modal :show.sync=\"showModal\">\n    <h3 slot=\"header\">New Cluster</h3>\n  \t<form slot=\"body\">\n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\" v-model=\"ambari.host\" id=\"ambari-host\" pattern=\"^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$\">\n           <label class=\"mdl-textfield__label\" for=\"ambari-host\">Host</label>\n           <span class=\"mdl-textfield__error\">Invalid IP</span>\n       </div> \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\" v-model=\"ambari.port\" id=\"ambari-port\" pattern=\"^([0-9]{1,4}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$\">\n           <label class=\"mdl-textfield__label\" for=\"ambari-port\">Port</label>\n           <span class=\"mdl-textfield__error\">Invalid Port</span>\n\n       </div>   \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\" v-model=\"ambari.user\" id=\"ambari-user\">\n           <label class=\"mdl-textfield__label\" for=\"ambari-user\">Username</label>\n       </div>   \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\" v-model=\"ambari.pass\" id=\"ambari-pass\">\n           <label class=\"mdl-textfield__label\" for=\"ambari-pass\">Password</label>\n       </div>    \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\"  v-model=\"confirmPass\" id=\"ambari-confirmPass\" pattern=\"{{ambari.pass}}\">\n           <label class=\"mdl-textfield__label\" for=\"ambari-confirmPass\">Confirm Password</label>\n           <span class=\"mdl-textfield__error\" >Incorrect Password</span>\n       </div>        \n    </form>\n  <div slot=\"footer\">\n    <button class=\"mdl-button mdl-js-button mdl-button--raised mdl-button--accent\" @click=\"addCluster\">\n      Add Cluster\n    </button>\n    <button class=\"mdl-button mdl-js-button mdl-button--raised \" @click=\"leaveModal\">\n      Cancel\n    </button>\n </div>\n </modal>\n</div>";
 
 /***/ },
 /* 143 */
@@ -16103,96 +16113,9 @@
 
 /***/ },
 /* 147 */,
-/* 148 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(149)
-	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(150)
-	if (false) {
-	(function () {
-	var hotAPI = require("vue-hot-reload-api")
-	hotAPI.install(require("vue"))
-	if (!hotAPI.compatible) return
-	var id = "-!babel?optional[]=runtime&loose=all&nonStandard=false!./../../../node_modules/vue-loader/lib/selector.js?type=script&index=0!./AlertView.vue"
-	hotAPI.createRecord(id, module.exports)
-	module.hot.accept(["-!babel?optional[]=runtime&loose=all&nonStandard=false!./../../../node_modules/vue-loader/lib/selector.js?type=script&index=0!./AlertView.vue","-!vue-html!./../../../node_modules/vue-loader/lib/selector.js?type=template&index=0!./AlertView.vue"], function () {
-	var newOptions = require("-!babel?optional[]=runtime&loose=all&nonStandard=false!./../../../node_modules/vue-loader/lib/selector.js?type=script&index=0!./AlertView.vue")
-	var newTemplate = require("-!vue-html!./../../../node_modules/vue-loader/lib/selector.js?type=template&index=0!./AlertView.vue")
-	hotAPI.update(id, newOptions, newTemplate)
-	})
-	})()
-	}
-
-/***/ },
-/* 149 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	exports.__esModule = true;
-	var Resource = __webpack_require__(125);
-	var Modal = __webpack_require__(137);
-	var MdlTable = __webpack_require__(152);
-	
-	var alertService = Resource.alertService;
-	
-	var Alarm = function Alarm() {
-		this.alertName = "";
-		this.alertDefinition = "";
-		this.description = "";
-		this.time = "";
-		this.alertState = "";
-	};
-	
-	exports['default'] = {
-	
-		name: "AlertView",
-		components: {
-			MdlTable: MdlTable,
-			Modal: Modal
-		},
-	
-		data: function data() {
-			return {
-				tableHeader: [{ "title": "Name" }, { "title": "Definition" }, { "title": "Description" }, { "title": "Time" }, { "title": "Status" }],
-				alerts: { name: "ok" },
-				showModal: false,
-				alarm: new Alarm()
-			};
-		},
-	
-		methods: {
-			leaveModal: function leaveModal() {
-				var vm = this;
-				vm.$set("showModal", false);
-				vm.$set("alarm", new Alarm());
-			},
-	
-			addAlarm: function addAlarm() {
-				var vm = this;
-				var clusterId = vm.$route.params.id;
-				alertService.resource.save({ id: clusterId }, vm.alarm, function (data, status, request) {});
-			}
-	
-		},
-	
-		created: function created() {
-	
-			var vm = this;
-			var clusterId = vm.$route.params.id;
-			alertService.resource.get({ id: clusterId }, function (data, status, request) {});
-		}
-	
-	};
-	module.exports = exports['default'];
-
-/***/ },
-/* 150 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"mdl-grid\">\n<div class=\" mdl-cell mdl-cell--12-col mdl-grid\">\n<mdl-table :header=\"tableHeader\"  :data=\"alerts\"></mdl-table>\n</div>\n<!-- Raised button -->\n<div class=\"mdl-cell mdl-cell--12-col mdl-grid\">\n<div class=\"mdl-cell mdl-cell--6-col\" >\n<button class=\"mdl-button mdl-js-button mdl-button--raised mdl-button--accent\"  @click=\"showModal= true\">\n  Add Alert Definition\n</button>\n</div>\n  <modal :show.sync=\"showModal\">\n    <h3 slot=\"header\">New Alarm</h3>\n  \t<form slot=\"body\">\n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\" v-model=\"alarm.alertName\" id=\"alarm-name\" >\n           <label class=\"mdl-textfield__label\" for=\"alarm-name\">Name</label>\n       </div> \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\" v-model=\"alarm.alertDefinition\" id=\"alarm-definition\" >\n           <label class=\"mdl-textfield__label\" for=\"alarm-definition\">Definition</label>\n       </div>  \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\" v-model=\"alarm.time\" id=\"alarm-time\" >\n           <label class=\"mdl-textfield__label\" for=\"alarm-time\">Time</label>\n       </div>  \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\" v-model=\"alarm.alertState\" id=\"alarm-status\" >\n           <label class=\"mdl-textfield__label\" for=\"alarm-status\">Status</label>\n       </div>   \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <textarea class=\"mdl-textfield__input\" type=\"text\" rows= \"3\" v-model=\"alarm.description\" id=\"alarm-description\" ></textarea>\n           <label class=\"mdl-textfield__label\" for=\"alarm-description\">Description</label>\n       </div>   \n    </form>\n  <div slot=\"footer\">\n    <button class=\"mdl-button mdl-js-button mdl-button--raised mdl-button--accent\" @click=\"addAlarm\">\n      Add Alarm\n    </button>\n    <button class=\"mdl-button mdl-js-button mdl-button--raised \" @click=\"leaveModal\">\n      Cancel\n    </button>\n </div>\n </modal>\n</div>\n</template>";
-
-/***/ },
+/* 148 */,
+/* 149 */,
+/* 150 */,
 /* 151 */,
 /* 152 */
 /***/ function(module, exports, __webpack_require__) {
@@ -16242,7 +16165,262 @@
 /* 154 */
 /***/ function(module, exports) {
 
-	module.exports = "<div>\n<table class=\"mdl-data-table mdl-js-data-table mdl-shadow--2dp mdl-cell mdl-cell--12-col\">\n  <thead>\n    <tr>\n<th v-for=\"field in header\" class=\"mdl-data-table__cell--non-numeric\">{{field.title}}</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr v-for=\"record in data\">\n      \n    </tr>\n  </tbody>\n</table>\n</div>";
+	module.exports = "<table class=\"mdl-data-table mdl-js-data-table mdl-shadow--2dp mdl-cell mdl-cell--12-col\">\n  <thead>\n    <tr>\n      <th v-for=\"field in header\" class=\"mdl-data-table__cell--non-numeric\">{{field.title}}</th>\n    </tr>\n  </thead>\n  <tbody>\n    \n   <slot name=\"tbody\">\n    <tr v-for=\"record in data\">\n       <td class=\"mdl-data-table__cell--non-numeric\" v-for=\" field in header\"> {{record[field.key]}}</td>\n    </tr>\n   </slot>\n  </tbody>\n</table>";
+
+/***/ },
+/* 155 */,
+/* 156 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(157)
+	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(158)
+	if (false) {
+	(function () {
+	var hotAPI = require("vue-hot-reload-api")
+	hotAPI.install(require("vue"))
+	if (!hotAPI.compatible) return
+	var id = "-!babel?optional[]=runtime&loose=all&nonStandard=false!./../../../node_modules/vue-loader/lib/selector.js?type=script&index=0!./DetailView.vue"
+	hotAPI.createRecord(id, module.exports)
+	module.hot.accept(["-!babel?optional[]=runtime&loose=all&nonStandard=false!./../../../node_modules/vue-loader/lib/selector.js?type=script&index=0!./DetailView.vue","-!vue-html!./../../../node_modules/vue-loader/lib/selector.js?type=template&index=0!./DetailView.vue"], function () {
+	var newOptions = require("-!babel?optional[]=runtime&loose=all&nonStandard=false!./../../../node_modules/vue-loader/lib/selector.js?type=script&index=0!./DetailView.vue")
+	var newTemplate = require("-!vue-html!./../../../node_modules/vue-loader/lib/selector.js?type=template&index=0!./DetailView.vue")
+	hotAPI.update(id, newOptions, newTemplate)
+	})
+	})()
+	}
+
+/***/ },
+/* 157 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	var AlertPanel = __webpack_require__(160);
+	var InstancePanel = __webpack_require__(164);
+	
+	exports['default'] = {
+		name: "DetailView",
+		components: {
+			AlertPanel: AlertPanel,
+			InstancePanel: InstancePanel
+		}
+	};
+	module.exports = exports['default'];
+
+/***/ },
+/* 158 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"mdl-tabs mdl-js-tabs mdl-js-ripple-effect\">\n  <div class=\"mdl-tabs__tab-bar\">\n      <a href=\"#alerts-panel\" class=\"mdl-tabs__tab is-active\">Alerts</a>\n      <a href=\"#instances-panel\" class=\"mdl-tabs__tab\">HOSTS</a>\n      <a href=\"#event-panel\" class=\"mdl-tabs__tab\">Targaryens</a>\n  </div>\n  <div class=\"mdl-tabs__panel is-active\" id=\"alerts-panel\">\n  \t<alert-panel ></alert-panel>\n  </div>\n  <div class=\"mdl-tabs__panel\" id=\"instances-panel\">\n  \t<instance-panel ></instance-panel>\n  </div>\n  <div class=\"mdl-tabs__panel\" id=\"event-panel\">\n  \t<alert-panel ></alert-panel>\n  </div>\n</div>";
+
+/***/ },
+/* 159 */,
+/* 160 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(161)
+	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(162)
+	if (false) {
+	(function () {
+	var hotAPI = require("vue-hot-reload-api")
+	hotAPI.install(require("vue"))
+	if (!hotAPI.compatible) return
+	var id = "-!babel?optional[]=runtime&loose=all&nonStandard=false!./../../../node_modules/vue-loader/lib/selector.js?type=script&index=0!./AlertPanel.vue"
+	hotAPI.createRecord(id, module.exports)
+	module.hot.accept(["-!babel?optional[]=runtime&loose=all&nonStandard=false!./../../../node_modules/vue-loader/lib/selector.js?type=script&index=0!./AlertPanel.vue","-!vue-html!./../../../node_modules/vue-loader/lib/selector.js?type=template&index=0!./AlertPanel.vue"], function () {
+	var newOptions = require("-!babel?optional[]=runtime&loose=all&nonStandard=false!./../../../node_modules/vue-loader/lib/selector.js?type=script&index=0!./AlertPanel.vue")
+	var newTemplate = require("-!vue-html!./../../../node_modules/vue-loader/lib/selector.js?type=template&index=0!./AlertPanel.vue")
+	hotAPI.update(id, newOptions, newTemplate)
+	})
+	})()
+	}
+
+/***/ },
+/* 161 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	var Resource = __webpack_require__(125);
+	var Modal = __webpack_require__(137);
+	var MdlTable = __webpack_require__(152);
+	
+	var alertService = Resource.alertService;
+	
+	var Alarm = function Alarm() {
+		this.alertName = "";
+		this.alertDefinition = "";
+		this.description = "";
+		this.time = "";
+		this.alertState = "";
+	};
+	
+	exports['default'] = {
+	
+		name: "AlertPanel",
+		components: {
+			MdlTable: MdlTable,
+			Modal: Modal
+		},
+	
+		data: function data() {
+			return {
+				tableHeader: [{ "title": "Name" }, { "title": "Definition" }, { "title": "Description" }, { "title": "Time" }, { "title": "Status" }, { "title": "Action" }],
+				alerts: { name: "ok" },
+				showModal: false,
+				alarm: new Alarm()
+			};
+		},
+	
+		methods: {
+			leaveModal: function leaveModal() {
+				var vm = this;
+				vm.$set("showModal", false);
+				vm.$set("alarm", new Alarm());
+			},
+	
+			addAlarm: function addAlarm() {
+				var vm = this;
+				var clusterId = vm.$route.params.id;
+				alertService.resource.save({ id: clusterId }, vm.alarm, function (data, status, request) {});
+				this.leaveModal();
+			}
+	
+		},
+	
+		created: function created() {
+	
+			var vm = this;
+			var clusterId = vm.$route.params.id;
+			alertService.resource.get({ id: clusterId }, function (data, status, request) {});
+		}
+	
+	};
+	module.exports = exports['default'];
+
+/***/ },
+/* 162 */
+/***/ function(module, exports) {
+
+	module.exports = "<div >\n         <div class=\"mdl-cell mdl-cell--12-col mdl-grid\">\n              <mdl-table :header=\"tableHeader\"  :data=\"alerts\"></mdl-table>\n              <div class=\"mdl-cell mdl-cell--12-col\">\n                <button class=\"mdl-button mdl-js-button mdl-button--raised mdl-button--accent\" @click=\"showModal=true\">Add alert definition</button>\n              </div>\n         </div> \n                    \n \n  <modal :show.sync=\"showModal\">\n    <h3 slot=\"header\">New Alarm</h3>\n  \t<form slot=\"body\">\n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\" v-model=\"alarm.alertName\" id=\"alarm-name\" >\n           <label class=\"mdl-textfield__label\" for=\"alarm-name\">Name</label>\n       </div> \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\" v-model=\"alarm.alertDefinition\" id=\"alarm-definition\" >\n           <label class=\"mdl-textfield__label\" for=\"alarm-definition\">Definition</label>\n       </div>  \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\" v-model=\"alarm.time\" id=\"alarm-time\" >\n           <label class=\"mdl-textfield__label\" for=\"alarm-time\">Time</label>\n       </div>  \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <input class=\"mdl-textfield__input\" type=\"text\" v-model=\"alarm.alertState\" id=\"alarm-status\" >\n           <label class=\"mdl-textfield__label\" for=\"alarm-status\">Status</label>\n       </div>   \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <textarea class=\"mdl-textfield__input\" type=\"text\" rows= \"3\" v-model=\"alarm.description\" id=\"alarm-description\" ></textarea>\n           <label class=\"mdl-textfield__label\" for=\"alarm-description\">Description</label>\n       </div>   \n    </form>\n  <div slot=\"footer\">\n    <button class=\"mdl-button mdl-js-button mdl-button--raised mdl-button--accent\" @click=\"addAlarm\">\n      Add Alarm\n    </button>\n    <button class=\"mdl-button mdl-js-button mdl-button--raised \" @click=\"leaveModal\">\n      Cancel\n    </button>\n </div>\n </modal>\n</div>";
+
+/***/ },
+/* 163 */,
+/* 164 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(165)
+	;(typeof module.exports === "function" ? module.exports.options : module.exports).template = __webpack_require__(166)
+	if (false) {
+	(function () {
+	var hotAPI = require("vue-hot-reload-api")
+	hotAPI.install(require("vue"))
+	if (!hotAPI.compatible) return
+	var id = "-!babel?optional[]=runtime&loose=all&nonStandard=false!./../../../node_modules/vue-loader/lib/selector.js?type=script&index=0!./InstancePanel.vue"
+	hotAPI.createRecord(id, module.exports)
+	module.hot.accept(["-!babel?optional[]=runtime&loose=all&nonStandard=false!./../../../node_modules/vue-loader/lib/selector.js?type=script&index=0!./InstancePanel.vue","-!vue-html!./../../../node_modules/vue-loader/lib/selector.js?type=template&index=0!./InstancePanel.vue"], function () {
+	var newOptions = require("-!babel?optional[]=runtime&loose=all&nonStandard=false!./../../../node_modules/vue-loader/lib/selector.js?type=script&index=0!./InstancePanel.vue")
+	var newTemplate = require("-!vue-html!./../../../node_modules/vue-loader/lib/selector.js?type=template&index=0!./InstancePanel.vue")
+	hotAPI.update(id, newOptions, newTemplate)
+	})
+	})()
+	}
+
+/***/ },
+/* 165 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	exports.__esModule = true;
+	var Resource = __webpack_require__(125);
+	var Modal = __webpack_require__(137);
+	var MdlTable = __webpack_require__(152);
+	
+	var instanceService = Resource.instanceService;
+	
+	var Instance = function Instance(instance) {
+		this.host = instance.privateIP;
+		this.id = instance.id;
+		this.state = instance.state;
+	};
+	
+	var Host = function Host(ip) {
+		this.privateIP = ip;
+	};
+	
+	exports['default'] = {
+	
+		name: "InstancePanel",
+		components: {
+			MdlTable: MdlTable,
+			Modal: Modal
+		},
+	
+		data: function data() {
+			return {
+				tableHeader: [{ "title": "host", "key": "host" }, { "title": "state", "key": "state" }, { "title": "action" }],
+				showModal: false,
+				hosts: "",
+				instances: []
+			};
+		},
+	
+		methods: {
+			leaveModal: function leaveModal() {
+				var vm = this;
+				vm.$set("showModal", false);
+				vm.$set("hosts", "");
+			},
+	
+			addInstances: function addInstances() {
+				var vm = this;
+				var clusterId = vm.$route.params.id;
+				var newHosts = vm.hosts.split(/\r?\n/).map(function (ip) {
+					return new Host(ip);
+				});
+				instanceService.resource.save({ id: clusterId }, JSON.stringify(newHosts), function (data, status, request) {
+					data.map(function (ins) {
+						vm.instances.push(new Instance(ins));
+					});
+					vm.$set("instances", vm.instances);
+				});
+				this.leaveModal();
+			},
+			deleteInstance: function deleteInstance(index) {
+				console.log(index);
+				var instanceId = this.instances[index].id;
+				var vm = this;
+				var clusterId = vm.$route.params.id;
+	
+				instanceService.resource['delete']({ id: clusterId, instanceId: instanceId }, function (data, request, status) {
+					vm.instances.splice(index, 1);
+				});
+			}
+	
+		},
+	
+		created: function created() {
+	
+			var vm = this;
+			var clusterId = vm.$route.params.id;
+			instanceService.resource.get({ id: clusterId }, function (data, status, request) {
+				vm.$set("instances", data.map(function (ins) {
+					return new Instance(ins);
+				}));
+			});
+		}
+	
+	};
+	module.exports = exports['default'];
+
+/***/ },
+/* 166 */
+/***/ function(module, exports) {
+
+	module.exports = "<div >\n         <div class=\"mdl-cell mdl-cell--12-col mdl-grid\">\n             <table class=\"mdl-data-table mdl-js-data-table mdl-shadow--2dp mdl-cell mdl-cell--12-col\">\n              <thead>\n                 <tr>\n                      <th v-for=\"field in tableHeader\" class=\"mdl-data-table__cell--non-numeric\">{{field.title}}</th>\n                 </tr>\n                 </thead>\n                 <tbody>\n                  <tr v-for=\"instance in instances\">\n                      <td class=\"mdl-data-table__cell--non-numeric\" > {{ instance.host}}</td>\n                      <td class=\"mdl-data-table__cell--non-numeric\" > {{ instance.state}}</td>\n\n                      <td class=\"mdl-data-table__cell--non-numeric\" > <button class=\"mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab \">\n                          <i class=\"material-icons\" @click=\"deleteInstance($index)\">close</i>\n                      </button></td>\n                  </tr>\n                 </tbody>\n              </table>\n              <div class=\"mdl-cell mdl-cell--12-col\">\n                <button class=\"mdl-button mdl-js-button mdl-button--raised mdl-button--accent\" @click=\"showModal=true\">Add Instances</button>\n              </div>\n         </div> \n                    \n \n  <modal :show.sync=\"showModal\">\n    <h3 slot=\"header\">New Instances</h3>\n  \t<form slot=\"body\"> \n       <div class=\"mdl-textfield mdl-js-textfield mdl-textfield--floating-label\" >\n           <textarea class=\"mdl-textfield__input\" type=\"text\" rows= \"8\" v-model=\"hosts\" id=\"alarm-description\" ></textarea>\n           <label class=\"mdl-textfield__label\" for=\"alarm-description\">Description</label>\n       </div>   \n    </form>\n  <div slot=\"footer\">\n    <button class=\"mdl-button mdl-js-button mdl-button--raised mdl-button--accent\" @click=\"addInstances\">\n      Add Instances\n    </button>\n    <button class=\"mdl-button mdl-js-button mdl-button--raised \" @click=\"leaveModal\">\n      Cancel\n    </button>\n </div>\n </modal>\n</div>";
 
 /***/ }
 /******/ ]);
