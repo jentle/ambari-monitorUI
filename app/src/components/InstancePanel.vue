@@ -91,7 +91,7 @@ export default{
 		addInstances:function(){
 			var vm = this;
 		    var clusterId = vm.$route.params.id		
-			var newHosts = vm.hosts.split(/\r?\n/).map(function(ip){ return new Host(ip)})
+			var newHosts = vm.hosts.trim().split(/\r?\n/).map(function(ip){ return new Host(ip)})
 			instanceService.resource.save({id:clusterId}, JSON.stringify(newHosts), function(data, status, request){
 				data.map(function(ins){ vm.instances.push( new Instance(ins))})
 				vm.$set("instances", vm.instances)

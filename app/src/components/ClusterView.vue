@@ -11,8 +11,8 @@
     </tr>
   </thead>
   <tbody>
-    <tr v-for="cluster in clusters" @click="clusterDetail($index)">
-      <td class="mdl-data-table__cell--non-numeric">{{cluster.host}}</td>
+    <tr v-for="cluster in clusters">
+      <td class="mdl-data-table__cell--non-numeric" @click="clusterDetail($index)">{{cluster.host}}</td>
       <td class="mdl-data-table__cell--non-numeric">{{cluster.port}}</td>
       <td class="mdl-data-table__cell--non-numeric">{{cluster.state}}</td>
       <td class="mdl-data-table__cell--non-numeric"><button class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">

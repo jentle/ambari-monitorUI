@@ -16,7 +16,7 @@ var router = new Router()
 
 router.map({
 	'/': {
-	    component: DashboardView
+	    component: ClusterView
 	  },
   	'/clusters': {	
   	    component: ClusterView,			
